@@ -1,5 +1,6 @@
 
 import sys, csv
+import pyodbc
 
 args_num = len(sys.argv)
 print("Number of arguments provided: ", args_num)
@@ -28,9 +29,21 @@ with open(input_file, 'r') as f:
 	reader = csv.reader(f)
 	voyager_list = list(reader)
 	
-print(voyager_list)
+""""print(voyager_list)"""
 
 
 
 """ Open odbc connection to WCT database """
+cnxn = pyodbc.connect('DSN=wct-dev;PWD=usr_wct')
 
+
+# Opening a cursor
+cursor = cnxn.cursor()
+
+cursor.execute("select usr_oid, usr_firstname, usr_email from db_wct.wctuser")
+row = cursor.fetchone()
+if row:
+    print(row)
+
+
+cnxn.close()
